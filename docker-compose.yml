@@ -30,7 +30,7 @@ php:
     MEMCACHED_HOST: cache
     CACHE_DRIVER: memcached
 db:
-  image: mysql
+  image: mysql:5.7
   ports:
     - "3306:3306"
   environment:
@@ -40,3 +40,10 @@ db:
     MYSQL_PASSWORD: secret
 cache:
   image: memcached
+static:
+  build: images/static
+  volumes:
+    - ./images/static:/app/public
+  working_dir: /app/public
+  ports:
+    - "4000:80"

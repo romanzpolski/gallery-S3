@@ -1,2 +1,6 @@
 .idea
-images/php/app
+images/php/app/.env
+images/php/app/vendor
+images/php/app/composer.lock
+images/static/app/node_modules
+images/static/app/package-lock.json
