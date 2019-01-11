@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Media, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Container, Row, Col, Media, Button, Form, FormGroup, Label, Input, FormText, Alert } from 'reactstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
@@ -11,7 +11,8 @@ export default class FormComponent extends Component {
         this.state = {
             name: '',
             file: {},
-            loading: false
+            loading: false,
+            alertVisible:false
         }
     };
 
@@ -47,7 +48,9 @@ export default class FormComponent extends Component {
             return response.json();
         }).then(data => {
             this.setState({
-                loading: false
+                loading: false,
+                msg: data.image,
+                alertVisible:true
             })
         }).catch(err => {
             console.log('Fetch Error', err);
@@ -55,12 +58,28 @@ export default class FormComponent extends Component {
 
     };
 
+    onDismissAlert = () => {
+        this.setState({ alertVisible: false });
+    }
+
     render(){
+
+        const style = {
+            "fontSize":"80px"
+        }
+
+
         return(
             <Container>
                 {this.state.loading ? (
-                    <FontAwesomeIcon icon={faCircleNotch} spin />
+                    <div className={"text-center"} style={style}>
+                        <FontAwesomeIcon icon={faCircleNotch} spin />
+                    </div>
                 ) : (
+                    <div>
+                    <Alert color="info" isOpen={this.state.alertVisible} toggle={this.onDismissAlert}>
+                        {this.state.msg}
+                    </Alert>
                     <Form className={'upload-form'} onSubmit={ this.submitForm }>
                         <FormGroup>
                         <Label for={"name"}>Name</Label>
@@ -73,6 +92,7 @@ export default class FormComponent extends Component {
                         <Button className={'success'} >Upload</Button>
                         <br/><br/>
                     </Form>
+                    </div>
                 )}
             </Container>
     );

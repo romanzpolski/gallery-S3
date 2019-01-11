@@ -3,7 +3,6 @@ namespace App;
 require '../vendor/autoload.php';
 use Aws\S3\S3Client;
 use Aws\Credentials\CredentialProvider;
-
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -36,7 +35,6 @@ class AwsImage {
             'Body' => $img
         ]);
 
-        //$this->log->warning();
         return $result->get('ObjectURL');
     }
 

@@ -43,7 +43,6 @@ cache:
 static:
   build: images/static
   volumes:
-    - ./images/static:/app/public
-  working_dir: /app/public
+    - ./images/static/app/build:/var/www
   ports:
     - "4000:80"

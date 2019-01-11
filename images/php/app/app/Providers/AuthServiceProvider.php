@@ -42,16 +42,7 @@ class AuthServiceProvider extends ServiceProvider
 //                return $user;
 //            }
 
-
-
             return null;
-//            if ($request->input('name')) {
-//                //return User::where('api_token', $request->input('api_token'))->first();
-//                return $request->input('name');
-//            }
-
-
-
         });
     }
 }

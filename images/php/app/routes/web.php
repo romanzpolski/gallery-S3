@@ -12,7 +12,6 @@
 */
 
 use App\Http\Controllers\ImagesController;
-use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
 
 
@@ -32,10 +31,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('image/download/{id}', function ($id) {
         return (new ImagesController())->downloadImage($id);
     });
-
-//    $router->post('image/upload', ['middleware' => 'auth', function (Request $request) {
-//        return (new ImagesController())->uploadImage($request);
-//    }]);
 
     $router->post('image/upload', function (Request $request) {
         return (new ImagesController())->uploadImage($request);

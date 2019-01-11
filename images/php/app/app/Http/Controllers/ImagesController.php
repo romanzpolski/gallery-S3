@@ -18,14 +18,6 @@ class ImagesController extends Controller
         $this->log = $log->pushHandler(new StreamHandler($logName, Logger::WARNING));
     }
 
-    public function testFunction(){
-        //$res = $this->getS3();
-        //$res = $this->getAwsImages();
-        $res = $this->getImages();
-        //$res = $this->returnJson();
-        return response()->json($res);
-    }
-
     public function downloadImage($id){
         $img = Image::find($id);
         $img->downloads = $img->downloads+1;
@@ -41,7 +33,6 @@ class ImagesController extends Controller
         );
         return response()->json(array("msg"=>"", "data"=>$res), 200);
     }
-
 
     public function getImages($page=0){
         $offset = $page * 9;
@@ -79,21 +70,18 @@ class ImagesController extends Controller
 
 //        $this->log->warning($name);
 
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            $image = $request->file('image');
-            $ext = $image->getClientOriginalExtension();
-            if($ext == "png" || $ext == "jpg") {
-                $imgName = time() . '.' . $ext;
-                //$this->saveToDisk($image, $imgName);
-                $imgDownloadUrl =  $this->saveToS3($image, $imgName);
-                $this->saveToDb($name, $imgName, $imgDownloadUrl);
-            } else {
-                return response()->json(array("msg"=>"File upload went wrong.. Please try again","data"=>[]) ,400);
-            }
-        } else {
-            return response()->json(array("msg"=>"File upload went wrong.. Please try again","data"=>[]), 400);
-        }
-        return response()->json(array("msg"=>"Image uploaded.", "data"=>[$imgName]), 201);
+        $this->validate($request, [
+            'image' => 'required|dimensions:max_width=1000,max_width=1000|mimes:jpeg,png'
+        ]);
+
+        $image = $request->file('image');
+        $ext = $image->getClientOriginalExtension();
+        $imgName = time() . '.' . $ext;
+        //$this->saveToDisk($image, $imgName);
+        $imgDownloadUrl =  $this->saveToS3($image, $imgName);
+        $this->saveToDb($name, $imgName, $imgDownloadUrl);
+
+        return response()->json(array("image"=>"Image uploaded ".$imgName), 201);
     }
 
     private function saveToDb($name, $imgName, $imgDownloadUrl) {
